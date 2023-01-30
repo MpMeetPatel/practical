@@ -1,6 +1,7 @@
 import { ErrorMessage } from "@hookform/error-message";
+import { Button, Input } from "antd";
 import { useContext } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
 import Swal from "sweetalert2";
 import { server } from "../api/server";
@@ -11,6 +12,7 @@ export default function SignIn() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm();
 
@@ -23,7 +25,7 @@ export default function SignIn() {
         `https://my-json-server.typicode.com/MpMeetPatel/json-server/profile`,
         { email, password }
       );
-      const user = data[Math.floor(Math.random()*3)].data;
+      const user = data[Math.floor(Math.random() * 3)].data;
       if (user?.token) {
         localStorage.setItem("token", user?.token);
         authContext?.authenticate(user?.token, user.name);
@@ -52,33 +54,27 @@ export default function SignIn() {
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(submitData)}>
-          <input type="hidden" name="remember" value="true" />
+          <Input type="hidden" name="remember" value="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email-address" className="sr-only">
                 Email address
               </label>
-              <input
-                id="email-address"
+
+              <Controller
+                control={control}
                 name="email"
-                type="email"
-                {...register("email", {
-                  required: {
-                    value: true,
-                    message: "Please provide email",
-                  },
-                  minLength: {
-                    value: 4,
-                    message: "Enter email having atleast 2 characters",
-                  },
-                  maxLength: {
-                    value: 50,
-                    message: "Enter email upto atleast 50 characters",
-                  },
-                })}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-              />
+                render={({ onChange, value }) => (
+                  <Input
+                    id="email"
+                    type="email"
+                    onChange={onChange}
+                    value={value}
+                    placeholder="Email address"
+                  />
+                )}
+              ></Controller>
+
               <div className="text-red-500 text-xs">
                 <ErrorMessage errors={errors} name="email" />
               </div>
@@ -87,27 +83,21 @@ export default function SignIn() {
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
-              <input
-                id="password"
+              <Controller
+                control={control}
                 name="password"
-                type="password"
-                {...register("password", {
-                  required: {
-                    value: true,
-                    message: "Please provide password",
-                  },
-                  minLength: {
-                    value: 4,
-                    message: "Enter password having atleast 2 characters",
-                  },
-                  maxLength: {
-                    value: 20,
-                    message: "Enter password upto atleast 20 characters",
-                  },
-                })}
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              />
+                render={({ onChange, value }) => (
+                  <Input
+                    control={control}
+                    id="password"
+                    type="password"
+                    onChange={onChange}
+                    value={value}
+                    placeholder="Password"
+                  />
+                )}
+              ></Controller>
+
               <div className="text-red-500 text-xs">
                 <ErrorMessage errors={errors} name="password" />
               </div>
@@ -115,29 +105,11 @@ export default function SignIn() {
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                <svg
-                  className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </span>
+            <Button type="primary" htmlType="submit">
               Sign in
-            </button>
+            </Button>
 
-            <div className="flex justify-between items-center mt-2">
+            {/* <div className="flex justify-between items-center mt-2">
               <div className="text-sm">
                 <NavLink to="/signup">
                   <a className="font-medium text-indigo-600 hover:text-indigo-500">
@@ -145,7 +117,7 @@ export default function SignIn() {
                   </a>
                 </NavLink>
               </div>
-            </div>
+            </div> */}
           </div>
         </form>
       </div>

@@ -30,7 +30,7 @@ export default function Profile() {
       { cancelToken: ourRequest.token }
     );
     setStep1({ step: 1, status: "completed" });
-    await sleep(500);
+    await sleep(1000);
     setStep2({ step: 2, status: "ongoing" });
     await axios.get(
       `https://my-json-server.typicode.com/MpMeetPatel/json-server/quote`,
@@ -103,8 +103,6 @@ export default function Profile() {
             onClick={() => {
               ourRequest.cancel("Operation cancelled");
               setOurRequest(axios.CancelToken.source());
-              // setStep1(null);
-              // setStep2(null);
             }}
           >
             Cancle Ongoing Request
